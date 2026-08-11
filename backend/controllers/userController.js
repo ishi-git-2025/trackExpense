@@ -7,7 +7,7 @@ const JWT_SECRET = "your_jwt_secret_key";
 const TOKEN_EXPIRATION = "24h";
 
 const createToken = (userId) => {
-    jwt.sign({ userId }, JWT_SECRET, { expiresIn: TOKEN_EXPIRATION });
+    return jwt.sign({ userId }, JWT_SECRET, { expiresIn: TOKEN_EXPIRATION });
 }
 
 //register user
@@ -34,7 +34,8 @@ export const registerUser = async (req, res) => {
 
         return res.status(201).json({
             success: true, message: "User registered successfully",
-            user: { id: newUser._id, name: newUser.name, email: newUser.email }
+            user: { id: newUser._id, name: newUser.name, email: newUser.email },
+            token
         });
     }
     catch (error) {
@@ -62,7 +63,8 @@ export const loginUser = async (req, res) => {
         const token = createToken(existingUser._id);
         return res.status(200).json({
             success: true, message: "User logged in successfully",
-            user: { id: existingUser._id, name: existingUser.name, email: existingUser.email }
+            user: { id: existingUser._id, name: existingUser.name, email: existingUser.email },
+            token
         });
     }
     catch (error) {
@@ -86,7 +88,7 @@ export const getUserDetails = async (req, res) => {
 }
 
 // update user details
-export const updateUserDetails = async (req, res) => {
+export const updateProfile = async (req, res) => {
     const { name, email } = req.body;
     if (!name || !email) {
         return res.status(400).json({ success: false, message: "Name or email is required" });
@@ -117,7 +119,7 @@ export const updateUserDetails = async (req, res) => {
 export const updatePassword = async (req, res) => {
     const { oldPassword, newPassword } = req.body;
     if (!oldPassword || !newPassword || newPassword.length < 8) {
-        return res.status(400).json({ success: false, message: "Pass invalid or too short" });
+        return res.status(400).json({ success: false, message: "Password invalid or too short" });
     }
     try {
         const existingUser = await user.findById(req.user.id);
@@ -127,7 +129,7 @@ export const updatePassword = async (req, res) => {
 
         const isPasswordCorrect = await bcrypt.compare(oldPassword, existingUser.password); //bcrypt generate a hash of oldPassword and compare it with the hash stored in the database for the user.
         if (!isPasswordCorrect) {
-            return res.status(401).json({ success: false, message: "Current password is incorrect" });
+            return res.status(401).json({ success: false, message: "old password is incorrect" });
         }
 
         const hashed = await bcrypt.hash(newPassword, 10);
