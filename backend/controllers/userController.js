@@ -3,7 +3,7 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = "your_jwt_secret_key"; 
+const JWT_SECRET = "your_jwt_secret_key";
 const TOKEN_EXPIRATION = "24h";
 
 const createToken = (userId) => {
@@ -32,8 +32,10 @@ export const registerUser = async (req, res) => {
         const newUser = await user.create({ name, email, password: hashed });
         const token = createToken(newUser._id);
 
-        return res.status(201).json({ success: true, message: "User registered successfully", 
-            user: { id: newUser._id, name: newUser.name, email: newUser.email } });
+        return res.status(201).json({
+            success: true, message: "User registered successfully",
+            user: { id: newUser._id, name: newUser.name, email: newUser.email }
+        });
     }
     catch (error) {
         return res.status(500).json({ success: false, message: error.message });
@@ -58,8 +60,10 @@ export const loginUser = async (req, res) => {
         }
 
         const token = createToken(existingUser._id);
-        return res.status(200).json({ success: true, message: "User logged in successfully", 
-            user: { id: existingUser._id, name: existingUser.name, email: existingUser.email } });
+        return res.status(200).json({
+            success: true, message: "User logged in successfully",
+            user: { id: existingUser._id, name: existingUser.name, email: existingUser.email }
+        });
     }
     catch (error) {
         return res.status(500).json({ success: false, message: error.message });
@@ -83,6 +87,55 @@ export const getUserDetails = async (req, res) => {
 
 // update user details
 export const updateUserDetails = async (req, res) => {
-    const userId = req.user.id;
     const { name, email } = req.body;
+    if (!name || !email) {
+        return res.status(400).json({ success: false, message: "Name or email is required" });
+    }
+    try {
+        const existingUser = await user.findOne({ email, _id: req.user.id });
+        if (!existingUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const updatedUser = await user.findByIdAndUpdate(
+            req.user.id,
+            { name, email },
+            { returnDocument: "after", runValidators: true, select: "name email" }
+        );
+        return res.status(200).json({
+            success: true, message: "User details updated successfully",
+            updatedUser
+        });
+
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+// to change password
+export const updatePassword = async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword || newPassword.length < 8) {
+        return res.status(400).json({ success: false, message: "Pass invalid or too short" });
+    }
+    try {
+        const existingUser = await user.findById(req.user.id);
+        if (!existingUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(oldPassword, existingUser.password); //bcrypt generate a hash of oldPassword and compare it with the hash stored in the database for the user.
+        if (!isPasswordCorrect) {
+            return res.status(401).json({ success: false, message: "Current password is incorrect" });
+        }
+
+        const hashed = await bcrypt.hash(newPassword, 10);
+        existingUser.password = hashed;
+        await existingUser.save();
+        return res.status(200).json({ success: true, message: "Password updated successfully" });
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
 }
