@@ -1,16 +1,21 @@
-# React + Vite
+# ExpenseTracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack expense tracking web application (frontend + backend) that helps users record and visualise income and expenses. The frontend is a React single-page app (JSX components + pages). The backend follows a simple controllers/models layout for handling expenses, income and dashboard logic.
 
-Currently, two official plugins are available:
+## Features
+- Record income and expenses
+- Dashboard with visualisations and metrics
+- Time-frame filtering for transactions
+- Authentication UI components (Login / Signup) included in the frontend
+- Sample testing data available in the backend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Stack
+- Language(s): JavaScript (frontend JSX + backend JS)
+- Framework / runtime: React (frontend), Node.js-style backend (controllers + models)
+- Notable files:
+  - frontend/src/pages/* — Dashboard, Expense, Income, Profile (main app pages)
+  - frontend/src/components/* — UI components like Add, GaugeCard, Layout, Login, Signup, Sidebar, Navbar, TransactionItem
+  - backend/controllers/* — dashboardController.js, expenseController.js, incomeController.js
+  - backend/models/* — expenseModel.js, incomeModel.js
+  - backend/utils/dateFilter.js — utility for filtering by date
+  - backend/testingDATA — sample/test data file
