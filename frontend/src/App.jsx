@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 
 const App = () => {
   const [user, setUser] = React.useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [token, setToken] = React.useState(null);
   const navigate = useNavigate();
 

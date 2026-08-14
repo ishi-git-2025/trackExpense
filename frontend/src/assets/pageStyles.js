@@ -578,23 +578,18 @@ export const sidebarStyles = {
   
   // Toggle button
   toggleButton: {
-    base: "absolute -right-3 top-12 z-20 w-6 h-6 bg-white border border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:text-teal-600 hover:border-teal-400 hover:bg-teal-50 transition-all"
+    base: "absolute -right-3 top-1/2 z-20 w-6 h-6 bg-white border border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:text-teal-600 hover:border-teal-400 hover:bg-teal-50 transition-all"
   },
   
   // Footer section
   footerContainer: {
-    base: "border-t border-gray-100 p-4",
+    base: "border-t border-gray-100 py-2",
     collapsed: "px-3",
-    expanded: "px-6"
-  },
-  
-  footerLink: {
-    base: "flex items-center gap-3 py-2 rounded-xl font-medium text-gray-600 hover:text-teal-700 hover:bg-gray-50",
-    collapsed: "justify-center"
+    expanded: "px-2"
   },
   
   logoutButton: {
-    base: "flex items-center gap-3 py-2 rounded-xl font-medium text-gray-600 hover:text-red-600 hover:bg-red-50 w-full mt-1",
+    base: "flex items-center gap-3 py-2 px-4 rounded-xl font-medium text-gray-600 hover:text-red-600 hover:bg-red-50 w-full mt-1",
     collapsed: "justify-center"
   },
   
@@ -618,7 +613,6 @@ export const sidebarStyles = {
   },
   
   mobileFooter: "border-t border-gray-100 p-6",
-  mobileFooterLink: "flex items-center gap-4 py-2 font-medium text-gray-600 hover:text-teal-700",
   mobileLogoutButton: "flex items-center gap-4 py-2 font-medium text-gray-600 hover:text-red-600 w-full",
   
   // Mobile menu button

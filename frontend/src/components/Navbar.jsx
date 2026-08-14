@@ -40,9 +40,7 @@ const Navbar = ({ user: propUser, onLogout }) => {
     }, [propUser]);
 
 
-    const toggleMenu = () => {
-        setMenuOpen((prev) => !prev);
-    }
+    const toggleMenu = () => setMenuOpen((prev) => !prev);
 
     const handleLogout = () => {
         setMenuOpen(false);
