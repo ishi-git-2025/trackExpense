@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from 'react'
 import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { sidebarStyles, cn } from '../assets/pageStyles'
-import { motion } from 'framer-motion'
-import { ArrowDown, ArrowUp, Home, LogOut, User } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ArrowDown, ArrowUp, Home, LogOut, Menu, User, X } from 'lucide-react'
 
 const MENU_ITEMS = [
     { text: 'Dashboard', path: '/', icon: <Home size={20} /> },
@@ -138,8 +138,8 @@ const Sidebar = ({ user, isCollapsed, setIsCollapsed }) => {
                         isCollapsed ? sidebarStyles.footerContainer.collapsed : sidebarStyles.footerContainer.expanded
                     )}>
                         <button onClick={handleLogout}
-                            className={cn(sidebarStyles.logoutButton.base, 
-                            isCollapsed ? sidebarStyles.logoutButton.collapsed : sidebarStyles.logoutButton.expanded)}
+                            className={cn(sidebarStyles.logoutButton.base,
+                                isCollapsed ? sidebarStyles.logoutButton.collapsed : sidebarStyles.logoutButton.expanded)}
                         >
                             <LogOut size={20} className='text-gray-500' />
                             {!isCollapsed && "Log out"}
@@ -148,9 +148,93 @@ const Sidebar = ({ user, isCollapsed, setIsCollapsed }) => {
                 </div>
             </motion.div>
 
+            <motion.button
+                onClick={() => setMobileOpen((prev) => !prev)}
+                className={sidebarStyles.mobileMenuButton}
+                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+            >
+                {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </motion.button>
+            <AnimatePresence>
+                {mobileOpen && (
+                    <motion.div
+                        className={sidebarStyles.mobileOverlay}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <motion.div
+                            className={sidebarStyles.mobileBackdrop}
+                            onClick={() => setMobileOpen(false)}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        />
 
+                        <motion.div
+                            ref={sidebarRef}
+                            className={sidebarStyles.mobileSidebar.base}
+                            initial={{ x: "-100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "-100%" }}
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                        >
+                            <div className="relative flex flex-col h-full">
+                                <div className={sidebarStyles.mobileHeader}>
+                                    <div className={sidebarStyles.mobileUserContainer}>
+                                        <div className={sidebarStyles.userInitials.base}>
+                                            {initial}
+                                        </div>
+                                        <div>
+                                            <h2 className='text-lg font-bold text-gray-800'>
+                                                {username}
+                                            </h2>
+                                            <p className='text-sm text-gray-500'>{email}</p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => setMobileOpen(false)}>
+                                        <X size={24} className="text-gray-600" />
+                                    </button>
+                                </div>
+
+                                <div className="flex-1 overflow-y-auto py-4">
+                                    <ul className={sidebarStyles.mobileMenuList}>
+                                        {MENU_ITEMS.map(({ text, path, icon }) => (
+                                            <motion.li key={text} whileTap={{ scale: 0.98 }}>
+                                                <Link
+                                                    to={path}
+                                                    onClick={() => setMobileOpen(false)}
+                                                    className={cn(
+                                                        sidebarStyles.mobileMenuItem.base,
+                                                        pathname === path
+                                                            ? sidebarStyles.mobileMenuItem.active
+                                                            : sidebarStyles.mobileMenuItem.inactive
+                                                    )}
+                                                >
+                                                    <span className={pathname === path ? sidebarStyles.menuIcon.active : sidebarStyles.menuIcon.inactive}>
+                                                        {icon}
+                                                    </span>
+                                                    <span>{text}</span>
+                                                </Link>
+                                            </motion.li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className={sidebarStyles.mobileFooter}>
+                                    <button onClick={handleLogout} className={sidebarStyles.mobileLogoutButton}>
+                                        <LogOut size={20} className='text-gray-500' />
+                                        <span>Log out</span>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
-    )
-}
+    );
+};
 
 export default Sidebar
