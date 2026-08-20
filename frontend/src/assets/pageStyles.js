@@ -653,9 +653,9 @@ export const styles = {
 
   // Grid Layout
   grid: {
-    main: "grid grid-cols-1 lg:grid-cols-3 gap-6",
+    main: "grid grid-cols-1 lg:grid-cols-3 gap-5",
     leftColumn: "lg:col-span-2 space-y-6",
-    rightColumn: "lg:col-span-1 lg:-mx-3 space-y-6",
+    rightColumn: "lg:col-span-1 space-y-6",
   },
 
   // Card Styles
