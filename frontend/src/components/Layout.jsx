@@ -21,7 +21,7 @@ const CATEGORY_ICONS = {
     Savings: <PiggyBank className="w-4 h-4" />,
 };
 
-//to filter
+// To filter the transactions based on the selected time frame (daily, weekly, monthly)
 const filterTransactions = (transactions, frame) => {
     const now = new Date();
     const today = new Date(now).setHours(0, 0, 0, 0);
@@ -43,16 +43,6 @@ const filterTransactions = (transactions, frame) => {
     }
 };
 
-const safeArrayFromResponse = (res) => {
-    const body = res?.data;
-    if (!body) return [];
-    if (Array.isArray(body)) return body;
-    if (Array.isArray(body.data)) return body.data;
-    if (Array.isArray(body.incomes)) return body.incomes;
-    if (Array.isArray(body.expenses)) return body.expenses;
-    return [];
-};
-
 const Layout = ({ user, onLogout }) => {
 
     const [transactions, setTransactions] = useState([]);
@@ -62,7 +52,7 @@ const Layout = ({ user, onLogout }) => {
     const [showAllTransactions, setShowAllTransactions] = useState(false);
     const [lastUpdated, setLastUpdated] = useState(new Date());
 
-    //fetch transactions
+    //To fetch transactions
     const fetchTransactions = async () => {
         try {
             setLoading(true);
@@ -74,11 +64,11 @@ const Layout = ({ user, onLogout }) => {
                 axios.get(`${BASE_URL}/expense/get`, { headers }),
             ]);
 
-            const incomes = safeArrayFromResponse(incomeRes).map((i) => ({
+            const incomes = (incomeRes.data?.data || []).map((i) => ({
                 ...i,
                 type: "income",
             }));
-            const expenses = safeArrayFromResponse(expenseRes).map((e) => ({
+            const expenses = (expenseRes.data?.data || []).map((e) => ({
                 ...e,
                 type: "expense",
             }));
@@ -107,6 +97,7 @@ const Layout = ({ user, onLogout }) => {
         }
     };
 
+    // To add a new transaction (income or expense)
     const addTransaction = async (transaction) => {
         try {
             const token = localStorage.getItem("token");
@@ -125,6 +116,7 @@ const Layout = ({ user, onLogout }) => {
         }
     };
 
+    // To edit an existing transaction (income or expense)
     const editTransaction = async (id, transaction) => {
         try {
             const token = localStorage.getItem("token");
@@ -145,6 +137,7 @@ const Layout = ({ user, onLogout }) => {
         }
     };
 
+    // To delete a transaction (income or expense)
     const deleteTransaction = async (id, type) => {
         try {
             const token = localStorage.getItem("token");
@@ -162,8 +155,9 @@ const Layout = ({ user, onLogout }) => {
         }
     };
 
+    // Initial data fetch on component mount
     useEffect(() => {
-        // Initial data fetch on component mount
+
         const loadInitialData = async () => {
             try {
                 setLoading(true);
@@ -175,11 +169,11 @@ const Layout = ({ user, onLogout }) => {
                     axios.get(`${BASE_URL}/expense/get`, { headers }),
                 ]);
 
-                const incomes = safeArrayFromResponse(incomeRes).map((i) => ({
+                const incomes = (incomeRes.data?.data || []).map((i) => ({
                     ...i,
                     type: "income",
                 }));
-                const expenses = safeArrayFromResponse(expenseRes).map((e) => ({
+                const expenses = (expenseRes.data?.data || []).map((e) => ({
                     ...e,
                     type: "expense",
                 }));
@@ -216,10 +210,12 @@ const Layout = ({ user, onLogout }) => {
         [transactions, timeFrame]
     ); // filter with useMemo to avoid unnecessary recalculations
 
+    // Calculate statistics based on the filtered transactions
     const stats = useMemo(() => {
         const now = new Date();
         const thirtyDaysAgo = new Date(now);
         thirtyDaysAgo.setDate(now.getDate() - 30);
+        console.log("date thirtyDaysAgo", thirtyDaysAgo);
 
         const last30DaysTransactions = transactions.filter(
             (t) => new Date(t.date) >= thirtyDaysAgo
@@ -283,6 +279,7 @@ const Layout = ({ user, onLogout }) => {
         };
     }, [transactions]);
 
+    // To get a human-readable label for the selected time frame
     const timeFrameLabel = useMemo(
         () =>
             timeFrame === "daily"
@@ -293,6 +290,7 @@ const Layout = ({ user, onLogout }) => {
         [timeFrame]
     );
 
+    // Context object to pass down to child components via Outlet
     const outletContext = {
         transactions: filteredTransactions,
         addTransaction,
@@ -307,13 +305,14 @@ const Layout = ({ user, onLogout }) => {
     const getSavingsRating = (rate) =>
         rate > 30 ? "Excellent" : rate > 20 ? "Good" : "Needs improvement";
 
+    // Calculate the top 5 spending categories based on expenses
     const topCategories = useMemo(
         () =>
             Object.entries(
                 transactions
                     .filter((t) => t.type === "expense")
                     .reduce((acc, t) => {
-                        acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
+                        acc[t.type] = (acc[t.type] || 0) + Number(t.amount);
                         return acc;
                     }, {})
             )
@@ -344,7 +343,7 @@ const Layout = ({ user, onLogout }) => {
                             <div>
                                 <p className={styles.statCards.cardTitle}>Total Balance</p>
                                 <p className={styles.statCards.cardValue}>
-                                    ₹{stats.allTimeSavings.toLocaleString("en-IN",{ maximumFractionDigits: 2 })}
+                                    ₹{stats.allTimeSavings.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
                                 </p>
                             </div>
                             <div className={styles.statCards.iconContainer("teal")}>
@@ -363,7 +362,7 @@ const Layout = ({ user, onLogout }) => {
                             <div>
                                 <p className={styles.statCards.cardTitle}>Monthly Income</p>
                                 <p className={styles.statCards.cardValue}>
-                                    ₹{stats.last30DaysIncome.toLocaleString("en-IN",{ maximumFractionDigits: 2 })}
+                                    ₹{stats.last30DaysIncome.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
                                 </p>
                             </div>
                             <div className={styles.statCards.iconContainer("green")}>
@@ -382,16 +381,15 @@ const Layout = ({ user, onLogout }) => {
                             <div>
                                 <p className={styles.statCards.cardTitle}>Monthly Expenses</p>
                                 <p className={styles.statCards.cardValue}>
-                                    ₹{stats.last30DaysExpenses.toLocaleString("en-IN",{ maximumFractionDigits: 2 })}
+                                    ₹{stats.last30DaysExpenses.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
                                 </p>
                             </div>
                             <div className={styles.statCards.iconContainer("orange")}>
-                                <ArrowDown className={styles.statCards.icon("orange")}/>
+                                <ArrowDown className={styles.statCards.icon("orange")} />
                             </div>
                         </div>
                         <p className={styles.statCards.cardFooter}>
-                            <span className={`text-orange-600 font-medium`}>
-                                {/* ${stats.colors.expenseChange(stats.expenseChange)} */}
+                            <span className={`font-medium ${styles.colors.expenseChange(stats.expenseChange)}`}>
                                 {stats.expenseChange > 0 ? "+" : ""}
                                 {stats.expenseChange}%
                             </span>{" "} from last month
@@ -408,7 +406,7 @@ const Layout = ({ user, onLogout }) => {
                                 </p>
                             </div>
                             <div className={styles.statCards.iconContainer("blue")}>
-                                <PiggyBank className={styles.statCards.icon("blue")}/>
+                                <PiggyBank className={styles.statCards.icon("blue")} />
                             </div>
                         </div>
                         <p className={styles.statCards.cardFooter}>
@@ -422,7 +420,7 @@ const Layout = ({ user, onLogout }) => {
                         <div className={styles.cards.base}>
                             <div className={styles.cards.header}>
                                 <h3 className={styles.cards.title}>
-                                    <TrendingUp className="w-6 h-6 text-teal-500"/> 
+                                    <TrendingUp className="w-6 h-6 text-teal-500" />
                                     Financial overview
                                     <span className="text-sm text-gray-500 font-normal">
                                         {timeFrameLabel}
@@ -441,7 +439,7 @@ const Layout = ({ user, onLogout }) => {
                                     Recent Transactions
                                 </h3>
                                 <button onClick={fetchTransactions} disabled={loading} className={styles.transactions.refreshButton}>
-                                    <RefreshCcw className={styles.transactions.refreshIcon(loading)}/>
+                                    <RefreshCcw className={styles.transactions.refreshIcon(loading)} />
                                 </button>
                             </div>
 
@@ -454,7 +452,7 @@ const Layout = ({ user, onLogout }) => {
 
                             <div className={styles.transactions.listContainer}>
                                 {displayedTransactions.map((transaction) => {
-                                    const {id, type, description, amount, date, category} = transaction;
+                                    const { id, type, description, amount, date, category } = transaction;
                                     return (
                                         <div key={id} className={styles.transactions.transactionItem}>
                                             <div className="flex items-center gap-1 md:gap-4 lg:gap-3">
@@ -493,9 +491,9 @@ const Layout = ({ user, onLogout }) => {
                                 ) : (
                                     <div className={styles.transactions.viewAllContainer}>
                                         <button onClick={() => setShowAllTransactions(!showAllTransactions)} className={styles.transactions.viewAllButton}>
-                                            {showAllTransactions ? 
-                                            (<><ChevronUp className="w-5 h-5" /> Show Less</>) : 
-                                            (<><ChevronDown className="w-5 h-5" /> View All Transactions ({transactions.length})</>)}
+                                            {showAllTransactions ?
+                                                (<><ChevronUp className="w-5 h-5" /> Show Less</>) :
+                                                (<><ChevronDown className="w-5 h-5" /> View All Transactions ({transactions.length})</>)}
                                         </button>
                                     </div>
                                 )}

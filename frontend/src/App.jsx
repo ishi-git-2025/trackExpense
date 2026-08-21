@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
+import Login from './components/Login';
 
 const App = () => {
   const [user, setUser] = React.useState(null);
@@ -31,6 +32,7 @@ const App = () => {
   return (
     <>
       <Routes>
+        <Route path="/login" element={<Login />} />
         <Route path="/" element={<Layout user={user} onLogout={handleLogout} />}>
           <Route index element={<Dashboard />} />
         </Route>
