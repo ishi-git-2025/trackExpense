@@ -6,7 +6,6 @@ import Login from './components/Login';
 
 const App = () => {
   const [user, setUser] = React.useState(null);
-  // eslint-disable-next-line no-unused-vars
   const [token, setToken] = React.useState(null);
   const navigate = useNavigate();
 
@@ -24,15 +23,41 @@ const App = () => {
     setToken(null);
   }
 
+  //to save token and user data in localStorage or sessionStorage based on remember me option
+  const persistAuth = (userObj, remember = false, token) => {
+    try {
+      if (remember) {
+        if (userObj) localStorage.setItem("user", JSON.stringify(userObj));
+        if (token) localStorage.setItem("token", token);
+        sessionStorage.removeItem("user");
+        sessionStorage.removeItem("token");
+      } else {
+        if (userObj) sessionStorage.setItem("user", JSON.stringify(userObj));
+        if (token) sessionStorage.setItem("token", token);
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+      }
+      setUser(userObj || null);
+      setToken(token || null);
+    } catch (err) {
+      console.error("persistAuth error:", err);
+    }
+  };
+
   const handleLogout = () => {
     clearAuth()
     navigate('/login');
   }
 
+  const handleLogin = (userData, remember = false, token) => {
+    persistAuth(userData, remember, token);
+    navigate('/');
+  }
+
   return (
     <>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/" element={<Layout user={user} onLogout={handleLogout} />}>
           <Route index element={<Dashboard />} />
         </Route>
