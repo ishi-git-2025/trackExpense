@@ -3,6 +3,7 @@ import { loginStyles } from '../assets/pageStyles'
 import { Eye, EyeOff, Lock, MailIcon, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const BASE_URL = 'http://localhost:4000/api';
 
@@ -154,7 +155,7 @@ const Login = ({ onLogin }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={loginStyles.input}
-                  placeholder="Enter your password"
+                  placeholder="••••••••"
                   required
                 />
                 <button
@@ -198,6 +199,15 @@ const Login = ({ onLogin }) => {
               )}
             </button>
           </form>
+
+          <div className={loginStyles.signUpContainer}>
+            <p className={loginStyles.signUpText}>
+              Don't have an account?{' '}
+              <Link to="/signup" className={loginStyles.signUpLink}>
+                Sign Up
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
