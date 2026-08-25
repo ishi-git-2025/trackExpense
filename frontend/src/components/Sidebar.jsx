@@ -20,8 +20,8 @@ const Sidebar = ({ user, isCollapsed, setIsCollapsed }) => {
     const [activeHover, setActiveHover] = useState(null);
 
     const { name: username = 'User name', email: email = 'user@example.com' } = user || {};
-    const initial = username.charAt(0).toUpperCase() || 'U';
-
+    const initial = username?.charAt(0)?.toUpperCase() || 'U';
+  
 
     // to check for overflow in mobile
     useEffect(() => {

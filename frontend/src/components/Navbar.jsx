@@ -3,42 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { navbarStyles } from '../assets/pageStyles';
 import logo from '../assets/logo.png';
 import { ChevronDown, User, LogOut } from 'lucide-react'
-import axios from 'axios';
 
-const BASE_URL = 'http://localhost:4000/api';
-
-const Navbar = ({ user: propUser, onLogout }) => {
+const Navbar = ({ user, onLogout }) => {
     const navigate = useNavigate();
     const menuRef = useRef();
     const [menuOpen, setMenuOpen] = useState(false);
-
-    const [user, setUser] = useState(propUser || { name: '', email: '' });
-
-    //fetch user data
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try{
-                const token = localStorage.getItem('token');                 
-                if (!token) return;
-
-                const response = await axios.get(`${BASE_URL}/user/me`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                const userData = response.data || response.data.existingUser;
-                setUser(userData);
-            }
-            catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-
-        if (!propUser) {
-            fetchUserData();
-        }
-    }, [propUser]);
-
 
     const toggleMenu = () => setMenuOpen((prev) => !prev);
 

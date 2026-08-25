@@ -43,7 +43,7 @@ const filterTransactions = (transactions, frame) => {
     }
 };
 
-const Layout = ({ user, onLogout }) => {
+const Layout = ({ user: propUser, onLogout }) => {
 
     const [transactions, setTransactions] = useState([]);
     const [timeFrame, setTimeFrame] = useState("monthly");
@@ -51,6 +51,7 @@ const Layout = ({ user, onLogout }) => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [showAllTransactions, setShowAllTransactions] = useState(false);
     const [lastUpdated, setLastUpdated] = useState(new Date());
+    const [user, setUser] = useState(propUser || null);
 
     //To fetch transactions
     const fetchTransactions = async () => {
@@ -155,9 +156,32 @@ const Layout = ({ user, onLogout }) => {
         }
     };
 
+    // Fetch user data if not provided
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) return;
+
+                const response = await axios.get(`${BASE_URL}/user/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                const userData = response.data?.existingUser || response.data;
+                setUser(userData);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        if (!propUser) {
+            fetchUserData();
+        }
+    }, [propUser]);
+
     // Initial data fetch on component mount
     useEffect(() => {
-
         const loadInitialData = async () => {
             try {
                 setLoading(true);
