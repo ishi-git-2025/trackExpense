@@ -3,6 +3,7 @@ import { signupStyles } from '../assets/pageStyles'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const BASE_URL = 'http://localhost:4000/api';
 
@@ -223,6 +224,12 @@ const Signup = ({ onSignup }) => {
                             ) : 'Create Account'}
                         </button>
                     </form>
+                    <div className={signupStyles.signInContainer}>
+                        <div className={signupStyles.signInText}>
+                            Already have an account?{" "}
+                            <Link to="/login" className={signupStyles.signInLink}>Sign in</Link>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
