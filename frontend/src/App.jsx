@@ -1,9 +1,40 @@
 import React from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Login from './components/Login';
 import Signup from './components/Signup';
+
+const BASE_URL = 'http://localhost:4000/api';
+
+// to get user data from localStorage
+const getTransactionFromStorage = () => {
+  const storedTransaction = localStorage.getItem('transaction');
+  return storedTransaction ? JSON.parse(storedTransaction) : [];
+}
+
+//protected route component to check if user is logged in
+const ProtectedRoute = ({ user, children }) => {
+  const localToken = localStorage.getItem('token');
+  const sessionToken = sessionStorage.getItem('token');
+  const hasToken = localToken || sessionToken;
+
+  if (!user || !hasToken) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+//scroll to top
+const ScrollToTop = () => {
+  const location = useLocation();
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  return null;
+}
 
 const App = () => {
   const [user, setUser] = React.useState(null);
