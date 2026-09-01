@@ -452,6 +452,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                                 </h3>
                             </div>
                             <Outlet context={outletContext} />
+                            {/* here child routes like dashboard are rendered */}
                         </div>
                     </div>
 
