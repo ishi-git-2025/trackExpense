@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const BASE_URL = 'http://localhost:4000/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Login = ({ onLogin }) => {
 

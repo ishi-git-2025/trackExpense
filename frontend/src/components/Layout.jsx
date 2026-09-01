@@ -6,7 +6,7 @@ import Sidebar from './Sidebar'
 import { Utensils, Home, Car, ShoppingCart, Gift, Zap, Activity, ArrowUp, CreditCard, PiggyBank, IndianRupee, ArrowDown, TrendingUp, Clock, RefreshCcw, Info, ChevronUp, ChevronDown, PieChart } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
 
-const BASE_URL = 'http://localhost:4000/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const CATEGORY_ICONS = {
     Food: <Utensils className="w-4 h-4" />,

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { ArrowLeft, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const BASE_URL = 'http://localhost:4000/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Signup = ({ onSignup }) => {
 
