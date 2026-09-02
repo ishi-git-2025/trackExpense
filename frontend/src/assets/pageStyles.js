@@ -661,8 +661,8 @@ export const styles = {
   // Card Styles
   cards: {
     base: "bg-white rounded-2xl p-6 shadow-sm border border-gray-100",
-    header: "flex justify-between items-center mb-6",
-    title: "text-xl font-bold text-gray-800 flex items-center gap-3 mb-5",
+    header: "flex justify-between items-center",
+    title: "text-xl font-bold text-gray-800 flex items-center gap-3",
     titleIcon: "w-6 h-6",
   },
 

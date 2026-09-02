@@ -30,7 +30,7 @@ const GaugeCard = ({
       <h3 className={`text-lg font-semibold mb-4 ${textColor}`}>
         {name}
       </h3>
-      <div className="w-full h-48">
+      <div className="w-full h-63">
         <ResponsiveContainer>
           <RadialBarChart
             data={[{...gauge, value: chartValue}]}
@@ -64,7 +64,7 @@ const GaugeCard = ({
               dominantBaseline="middle"
               className={`text-2xl font-bold ${textColor}`}
             >
-              {isNegative ? '-' : ''}${Math.round(absValue).toLocaleString()}
+              {isNegative ? '-' : ''}₹{Math.round(absValue).toLocaleString()}
             </text>
             <text 
               x="50%" 
