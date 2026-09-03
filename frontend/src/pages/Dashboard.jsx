@@ -343,7 +343,7 @@ const Dashboard = () => {
               Track your income and expense
             </p>
           </div>
-          <button onClick={() => setShowModal(true)} className={dashboardStyles.addButton}>
+          <button onClick={() => setShowModal(true)} disabled={loading} className={dashboardStyles.addButton}>
             <Plus size={24} />
             Add Transaction
           </button>
