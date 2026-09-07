@@ -55,7 +55,7 @@ const Dashboard = () => {
     timeFrame = "monthly",
     setTimeFrame = () => { },
     refreshTransactions
-  } = useOutletContext();
+  } = useOutletContext(); // to use in calculating weekly & daily data
 
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -227,7 +227,7 @@ const Dashboard = () => {
       const response = await axios.get(`${BASE_URL}/dashboard`, { headers: getAuthHeader() });
 
       if (response?.data?.success) {
-        const data = response.data || {};
+        const data = response.data.data || {};
 
         const recent = (data.recentTransactions || []).map((item) => {
           const typeFromServer =
@@ -274,9 +274,6 @@ const Dashboard = () => {
           recentTransactions: recent,
         }));
 
-        if (timeFrame === "monthly") {
-          // gaugeData derives automatically from overviewMeta set above
-        }
       } else {
         console.warn("Dashboard endpoint returned success:false", response?.data);
       }
