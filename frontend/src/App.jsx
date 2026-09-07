@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import Income from './pages/Income';
 import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -209,6 +210,14 @@ const App = () => {
             editTransaction={editTransaction}
             deleteTransaction={deleteTransaction}
             refreshTransactions={refreshTransactions}
+          />} />
+
+          <Route path='/income' element={<Income
+          transactions={transactions}
+          addTransaction={addTransaction}
+          editTransaction={editTransaction}
+          deleteTransaction={deleteTransaction}
+          refreshTransactions={refreshTransactions}
           />} />
         </Route>
       </Routes>

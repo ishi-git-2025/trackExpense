@@ -503,7 +503,7 @@ export const transactionItemStyles = {
   
   // Layout styles
   mainContainer: "flex items-center gap-3 flex-1 min-w-0",
-  actionsContainer: "flex items-center justify-between gap-3 mt-2 md:mt-0",
+  actionsContainer: "flex items-start justify-between gap-3 mt-2 md:mt-0",
   amountContainer: "min-w-[100px] flex-shrink-0 flex justify-end",
   buttonsContainer: "flex gap-1 flex-shrink-0",
   
@@ -528,8 +528,8 @@ export const transactionItemStyles = {
   amountText: (amountClass, classes) => `${amountClass} ${classes.text}`,
   
   // Button styles
-  saveButton: (classes) => `p-2 ${classes.button} rounded-lg`,
-  cancelButton: "p-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400",
+  saveButton: (classes) => `p-2 ${classes.button} rounded-lg mt-1`,
+  cancelButton: "p-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 mt-1",
   editButton: (classes) => `p-2 ${classes.text} rounded-lg hover:${classes.bg}`,
   deleteButton: (classes) => `p-2 ${classes.text} rounded-lg hover:${classes.bg}`
 };
