@@ -5,9 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Income from './pages/Income';
-import axios from 'axios';
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import api from './utils/axiosConfig';
 
 // to get user data from localStorage
 const getTransactionsFromStorage = () => {
@@ -114,11 +112,7 @@ const App = () => {
         }
         if (storedToken) {
           try {
-            const response = await axios.get(`${BASE_URL}/user/me`, {
-              headers: {
-                'Authorization': `Bearer ${storedToken}`,
-              }
-            });
+            const response = await api.get('/user/me');
             const profile = response.data;
             persistAuth(profile, !!localToken, storedToken);
           } catch (error) {

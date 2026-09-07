@@ -1,11 +1,9 @@
 import React from 'react'
 import { signupStyles } from '../assets/pageStyles'
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { ArrowLeft, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Signup = ({ onSignup }) => {
 
@@ -22,11 +20,8 @@ const Signup = ({ onSignup }) => {
     const fetchProfile = async (token) => {
         if (!token) return;
         try {
-            const response = await axios.get(`${BASE_URL}/user/me`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
+            const response = await api.get('/user/me', {
+                headers: { Authorization: `Bearer ${token}` }
             });
             const data = response.data;
             return data;
@@ -78,11 +73,7 @@ const Signup = ({ onSignup }) => {
         setError({});
 
         try {
-            const response = await axios.post(`${BASE_URL}/user/register`, {
-                name,
-                email,
-                password
-            });
+            const response = await api.post('/user/register', { name, email, password });
 
             const data = response.data || {};
             const token = data.token || null;

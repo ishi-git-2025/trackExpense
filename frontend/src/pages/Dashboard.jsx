@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { dashboardStyles, trendStyles, chartStyles } from '../assets/pageStyles';
 import { GAUGE_COLORS, COLORS, EXPENSE_CATEGORY_ICONS, INCOME_CATEGORY_ICONS } from '../assets/color';
 import { calculateData, getTimeFrameRange, getPreviousTimeFrameRange } from '../components/Helpers';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { useOutletContext } from 'react-router-dom';
 import {
   Plus,
@@ -20,13 +20,6 @@ import FinancialCard from '../components/FinancialCard';
 import GaugeCard from '../components/GaugeCard';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import AddTransactionModal from '../components/Add';
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-const getAuthHeader = () => {
-  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
 
 // Function to convert date to ISO format with client time
 function toIsoWithClientTime(dateValue) {
@@ -224,7 +217,7 @@ const Dashboard = () => {
 
   const fetchDashboardOverview = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/dashboard`, { headers: getAuthHeader() });
+      const response = await api.get('/dashboard');
 
       if (response?.data?.success) {
         const data = response.data.data || {};
@@ -303,13 +296,9 @@ const Dashboard = () => {
     try {
       setLoading(true);
       if (newTransaction.type === "income") {
-        await axios.post(`${BASE_URL}/income/add`, payload, {
-          headers: getAuthHeader(),
-        });
+        await api.post(`/income/add`, payload);
       } else {
-        await axios.post(`${BASE_URL}/expense/add`, payload, {
-          headers: getAuthHeader(),
-        });
+        await api.post(`/expense/add`, payload);
       }
       await refreshTransactions();
       await fetchDashboardOverview();

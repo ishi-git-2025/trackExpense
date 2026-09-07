@@ -1,12 +1,10 @@
 import { useState, useMemo, useEffect } from 'react'
-import axios from 'axios'
+import api from '../utils/axiosConfig'
 import { styles } from '../assets/pageStyles'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 import { Utensils, Home, Car, ShoppingCart, Gift, Zap, Activity, ArrowUp, CreditCard, PiggyBank, IndianRupee, ArrowDown, TrendingUp, Clock, RefreshCcw, Info, ChevronUp, ChevronDown, PieChart } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const CATEGORY_ICONS = {
     Food: <Utensils className="w-4 h-4" />,
@@ -57,12 +55,9 @@ const Layout = ({ user: propUser, onLogout }) => {
     const fetchTransactions = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem("token");
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
             const [incomeRes, expenseRes] = await Promise.all([
-                axios.get(`${BASE_URL}/income/get`, { headers }),
-                axios.get(`${BASE_URL}/expense/get`, { headers }),
+                api.get("/income/get"),
+                api.get("/expense/get"),
             ]);
 
             const incomes = (incomeRes.data?.data || []).map((i) => ({
@@ -101,11 +96,9 @@ const Layout = ({ user: propUser, onLogout }) => {
     // To add a new transaction (income or expense)
     const addTransaction = async (transaction) => {
         try {
-            const token = localStorage.getItem("token");
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
             const endpoint =
                 transaction.type === "income" ? "income/add" : "expense/add";
-            await axios.post(`${BASE_URL}/${endpoint}`, transaction, { headers });
+            await api.post(`/${endpoint}`, transaction);
             await fetchTransactions();
             return true;
         } catch (err) {
@@ -120,13 +113,9 @@ const Layout = ({ user: propUser, onLogout }) => {
     // To edit an existing transaction (income or expense)
     const editTransaction = async (id, transaction) => {
         try {
-            const token = localStorage.getItem("token");
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
             const endpoint =
                 transaction.type === "income" ? "income/update" : "expense/update";
-            await axios.put(`${BASE_URL}/${endpoint}/${id}`, transaction, {
-                headers,
-            });
+            await api.put(`/${endpoint}/${id}`, transaction);
             await fetchTransactions();
             return true;
         } catch (err) {
@@ -141,10 +130,8 @@ const Layout = ({ user: propUser, onLogout }) => {
     // To delete a transaction (income or expense)
     const deleteTransaction = async (id, type) => {
         try {
-            const token = localStorage.getItem("token");
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
             const endpoint = type === "income" ? "income/delete" : "expense/delete";
-            await axios.delete(`${BASE_URL}/${endpoint}/${id}`, { headers });
+            await api.delete(`/${endpoint}/${id}`);
             await fetchTransactions();
             return true;
         } catch (err) {
@@ -160,14 +147,10 @@ const Layout = ({ user: propUser, onLogout }) => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const token = localStorage.getItem("token");
+                const token = localStorage.getItem("token") || sessionStorage.getItem("token");
                 if (!token) return;
 
-                const response = await axios.get(`${BASE_URL}/user/me`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+                const response = await api.get("/user/me");
                 const userData = response.data?.existingUser || response.data;
                 setUser(userData);
             } catch (error) {
@@ -185,12 +168,9 @@ const Layout = ({ user: propUser, onLogout }) => {
         const loadInitialData = async () => {
             try {
                 setLoading(true);
-                const token = localStorage.getItem("token");
-                const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
                 const [incomeRes, expenseRes] = await Promise.all([
-                    axios.get(`${BASE_URL}/income/get`, { headers }),
-                    axios.get(`${BASE_URL}/expense/get`, { headers }),
+                    api.get("/income/get"),
+                    api.get("/expense/get"),
                 ]);
 
                 const incomes = (incomeRes.data?.data || []).map((i) => ({

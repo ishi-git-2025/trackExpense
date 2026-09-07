@@ -2,10 +2,8 @@ import React from 'react'
 import { loginStyles } from '../assets/pageStyles'
 import { Eye, EyeOff, Lock, MailIcon, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axiosConfig';
 import { Link } from 'react-router-dom';
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Login = ({ onLogin }) => {
 
@@ -21,11 +19,8 @@ const Login = ({ onLogin }) => {
   const fetchProfile = async (token) => {
     if (!token) return;
     try {
-      const response = await axios.get(`${BASE_URL}/user/me`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+      const response = await api.get('/user/me', {
+        headers: { Authorization: `Bearer ${token}` }
       });
       const data = response.data;
       return data;
@@ -51,14 +46,7 @@ const Login = ({ onLogin }) => {
     setError('');
 
     try {
-      const response = await axios.post(`${BASE_URL}/user/login`, {
-        email,
-        password
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await api.post('/user/login', { email, password });
       const data = response.data || {};
       const token = data.token || null;
 
