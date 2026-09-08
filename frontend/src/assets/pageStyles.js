@@ -193,10 +193,10 @@ export const incomeStyles = {
 
 export const expensePageStyles = {
   // Main container
-  container: "space-y-6 max-w-7xl",
+  container:  "space-y-4 md:space-y-6 md:pt-4 max-w-7xl mx-auto",
   
   // Header card
-  headerCard: "bg-white rounded-xl p-4  lg:-mx-0 -mx-3.5  overflow-x-hidden mb-8 shadow",
+  headerCard: "bg-white rounded-lg p-4 lg:-mx-0 -mx-3.5  overflow-x-hidden mb-8 shadow",
   headerContainer: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4 mb-4 md:mb-6",
   headerTitle: "text-2xl md:text-3xl font-bold text-gray-800",
   headerSubtitle: "text-gray-600 mt-1",
