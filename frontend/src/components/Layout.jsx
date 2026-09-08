@@ -163,6 +163,13 @@ const Layout = ({ user: propUser, onLogout }) => {
         }
     }, [propUser]);
 
+
+    // Update user state when propUser changes in the parent component (e.g., after login or profile update)
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setUser(propUser || null);
+    }, [propUser]);
+
     // Initial data fetch on component mount
     useEffect(() => {
         const loadInitialData = async () => {
@@ -259,7 +266,7 @@ const Layout = ({ user: propUser, onLogout }) => {
         const previous30DaysExpenses = previous30DaysTransactions
             .filter((t) => t.type === "expense")
             .reduce((sum, t) => sum + Number(t.amount), 0);
-        
+
         const previous30DaysIncome = previous30DaysTransactions
             .filter((t) => t.type === "income")
             .reduce((sum, t) => sum + Number(t.amount), 0);
@@ -272,16 +279,16 @@ const Layout = ({ user: propUser, onLogout }) => {
                     100
                 )
                 : 0;
-        
+
         const incomeChange =
             previous30DaysIncome > 0
-                ? Math.round( 
+                ? Math.round(
                     ((last30DaysIncome - previous30DaysIncome) /
                         previous30DaysIncome) *
                     100
                 )
                 : 0;
-        
+
         return {
             totalTransactions: transactions.length,
             last30DaysIncome,
