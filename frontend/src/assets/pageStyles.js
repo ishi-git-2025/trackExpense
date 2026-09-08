@@ -14,7 +14,7 @@ export const dashboardStyles = {
   addButton: "flex items-center gap-2 bg-teal-500 hover:bg-teal-600 text-white px-5 py-3 rounded-xl transition-all shadow hover:shadow-md font-medium",
   
   // Time frame selector styles
-  timeFrameContainer: "flex justify-end mt-4",
+  timeFrameContainer: "flex justify-end mt-4 pr-3",
   timeFrameWrapper: "flex gap-0 bg-white p-1 -mx-5 rounded-xl border border-gray-200",
   timeFrameButton: (isActive) => 
     `px-2.5 py-2 text-sm rounded-lg transition-all ${
@@ -154,7 +154,7 @@ export const incomeStyles = {
   emptyStateButton: "mt-3 md:mt-4 flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-3 py-2 md:px-4 md:py-2.5 rounded-lg md:rounded-xl transition-all shadow-md hover:shadow-lg mx-auto text-sm md:text-base",
   
   // Time Frame Selector Container
-  timeFrameContainer: "flex px-10 -mx-14 justify-center lg:-mx-0 md:-mx-0 lg:justify-end md:justify-end mt-4",
+  timeFrameContainer: "flex justify-center lg:-mx-0 md:-mx-0 lg:justify-end md:justify-end mt-4",
 
    // Chart header container 
   chartHeaderContainer: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-5",
@@ -225,6 +225,7 @@ export const expensePageStyles = {
   emptyStateIcon: "w-16 h-16 mx-auto mb-4 rounded-full bg-orange-50 flex items-center justify-center",
   emptyStateText: "text-gray-600 font-medium",
   emptyStateSubtext: "text-sm text-gray-500 mt-2",
+  emptyStateButton: "mt-4 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-4 py-3 rounded-xl transition-all shadow-md hover:shadow-lg font-medium mx-auto",
   
   // Icons
   iconOrange: "p-2 bg-orange-100 rounded-lg",
@@ -254,11 +255,8 @@ export const expensePageStyles = {
   // Export button for chart header (different from existing exportButton)
   chartExportButton: "flex items-center gap-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg transition-all text-sm hover:shadow-md",
   
-  // Additional empty state style 
-  emptyStateSubtext: "text-sm text-gray-500 mt-2",
-  
   // Timeframe positioning 
-  timeframePositioning: "flex px-10 -mx-14 justify-center lg:-mx-0 md:-mx-0 lg:justify-end md:justify-end mt-4",
+  timeframePositioning: "flex justify-center lg:-mx-0 md:-mx-0 lg:justify-end md:justify-end mt-4",
   
   // Transaction item specific styles 
   transactionItemContainer: "flex items-center justify-between p-3 -mx-2 hover:bg-amber-50 rounded-xl transition-all duration-300 border border-gray-100 cursor-pointer mb-3 group",
@@ -694,7 +692,7 @@ export const styles = {
   categories: {
     title: "text-lg md:text-xl lg:text-xl xl:text-xl font-bold text-gray-800 mb-6 flex items-center gap-3",
     titleIcon: "w-6 h-6 text-cyan-500",
-    list: "space-y-4",
+    list: "space-y-4 mt-6",
     categoryItem: "flex items-center md:text-lg lg:text-sm xl:text-lg justify-between",
     categoryIconContainer: "bg-gray-100 p-2 rounded-lg",
     categoryIcon: "w-4 h-4 text-gray-600",

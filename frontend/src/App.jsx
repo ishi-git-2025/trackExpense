@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Income from './pages/Income';
+import Expense from './pages/Expense';
 import api from './utils/axiosConfig';
 
 // to get user data from localStorage
@@ -213,6 +214,15 @@ const App = () => {
           deleteTransaction={deleteTransaction}
           refreshTransactions={refreshTransactions}
           />} />
+
+          <Route path='/expense' element={<Expense
+          transactions={transactions}
+          addTransaction={addTransaction}
+          editTransaction={editTransaction}
+          deleteTransaction={deleteTransaction}
+          refreshTransactions={refreshTransactions}
+          />} />
+
         </Route>
       </Routes>
     </>

@@ -268,7 +268,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                     100
                 )
                 : 0;
-
+        
         return {
             totalTransactions: transactions.length,
             last30DaysIncome,
@@ -316,7 +316,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                 transactions
                     .filter((t) => t.type === "expense")
                     .reduce((acc, t) => {
-                        acc[t.type] = (acc[t.type] || 0) + Number(t.amount);
+                        acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
                         return acc;
                     }, {})
             )
