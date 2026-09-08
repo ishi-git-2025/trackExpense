@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Income from './pages/Income';
 import Expense from './pages/Expense';
+import Profile from './pages/Profile';
 import api from './utils/axiosConfig';
 
 // to get user data from localStorage
@@ -39,6 +40,7 @@ const ScrollToTop = () => {
 
 const App = () => {
   const [user, setUser] = React.useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [token, setToken] = React.useState(null);
   const [transactions, setTransactions] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -191,16 +193,16 @@ const App = () => {
         <Route path="/signup" element={<Signup onSignup={handleSignup} />} />
         <Route path="/" element=
           {<ProtectedRoute user={user}>
-            <Layout user={user} onLogout={handleLogout} 
-            transactions={transactions} 
-            addTransaction={addTransaction}
-            editTransaction={editTransaction}
-            deleteTransaction={deleteTransaction}
-            refreshTransactions={refreshTransactions}
+            <Layout user={user} onLogout={handleLogout}
+              transactions={transactions}
+              addTransaction={addTransaction}
+              editTransaction={editTransaction}
+              deleteTransaction={deleteTransaction}
+              refreshTransactions={refreshTransactions}
             />
           </ProtectedRoute>}>
-          <Route path='/' element={<Dashboard 
-            transactions={transactions} 
+          <Route path='/' element={<Dashboard
+            transactions={transactions}
             addTransaction={addTransaction}
             editTransaction={editTransaction}
             deleteTransaction={deleteTransaction}
@@ -208,22 +210,28 @@ const App = () => {
           />} />
 
           <Route path='/income' element={<Income
-          transactions={transactions}
-          addTransaction={addTransaction}
-          editTransaction={editTransaction}
-          deleteTransaction={deleteTransaction}
-          refreshTransactions={refreshTransactions}
+            transactions={transactions}
+            addTransaction={addTransaction}
+            editTransaction={editTransaction}
+            deleteTransaction={deleteTransaction}
+            refreshTransactions={refreshTransactions}
           />} />
 
           <Route path='/expense' element={<Expense
-          transactions={transactions}
-          addTransaction={addTransaction}
-          editTransaction={editTransaction}
-          deleteTransaction={deleteTransaction}
-          refreshTransactions={refreshTransactions}
+            transactions={transactions}
+            addTransaction={addTransaction}
+            editTransaction={editTransaction}
+            deleteTransaction={deleteTransaction}
+            refreshTransactions={refreshTransactions}
           />} />
 
+          <Route path='/profile' element={<Profile
+            user={user}
+            onUpdateProfile={updateUserData} 
+            onLogout={handleLogout}
+          />} />
         </Route>
+        <Route path="*" element={<Navigate to={user? '/' : '/login'} replace />} /> 
       </Routes>
     </>
   )
