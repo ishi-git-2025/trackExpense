@@ -473,10 +473,10 @@ const ExpensePage = () => {
                 tickLine={false}
                 tick={{ fill: "#6b7280", fontSize: 12 }}
                 width={60}
-                tickFormatter={(value) => `$${value.toLocaleString()}`}
+                tickFormatter={(value) => `₹${value.toLocaleString()}`}
               />
               <Tooltip
-                formatter={(value) => [`$${Math.round(value).toLocaleString()}`, "Expense"]}
+                formatter={(value) => [`₹${Math.round(value).toLocaleString()}`, "Expense"]}
                 contentStyle={styles.tooltipContent}
               />
               <Area

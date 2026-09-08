@@ -97,11 +97,11 @@ const IncomeChart = ({ chartData, timeFrame, timeFrameRange }) => (
             tickLine={false}
             tick={{ fill: "#6b7280", fontSize: 12 }}
             width={50}
-            tickFormatter={(value) => `$${value.toLocaleString()}`}
+            tickFormatter={(value) => `₹${value.toLocaleString()}`}
           />
           <Tooltip
             formatter={(value) => [
-              `$${Math.round(value).toLocaleString()}`,
+              `₹${Math.round(value).toLocaleString()}`,
               "Income",
             ]}
             contentStyle={styles.tooltipContent}
