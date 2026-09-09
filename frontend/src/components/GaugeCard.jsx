@@ -26,7 +26,7 @@ const GaugeCard = ({
   const percentColor = isNegative ? 'text-red-500' : 'text-gray-500';
 
   return (
-    <div className="bg-white rounded-xl p-5 -mx-3 lg:-mx-0 md:-mx-5 shadow-sm flex flex-col items-center border border-gray-100">
+    <div className="bg-white rounded-xl p-5 mx-5 lg:-mx-0 md:-mx-2 shadow-sm flex flex-col items-center border border-gray-100">
       <h3 className={`text-lg font-semibold mb-4 ${textColor}`}>
         {name}
       </h3>

@@ -2,7 +2,7 @@
 
 export const dashboardStyles = {
   // Layout styles
-  container: "min-h-screen p-4 md:p-6",
+  container: "min-h-screen pt-4 md:p-6",
   
   // Header styles
   headerContainer: "bg-gradient-to-r from-teal-500/10 to-cyan-500/10 backdrop-blur-lg rounded-3xl p-6 mb-8 shadow-lg border border-white/30",
@@ -31,7 +31,7 @@ export const dashboardStyles = {
   expenseBadge: "bg-orange-100 text-orange-800 px-1 py-1 rounded-lg text-xs",
   
   // Gauge container styles
-  gaugeGrid: "grid grid-cols-1 -mx-5 xl:-mx-5 md:grid-cols-3 md:gap-13 lg:gap-3 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8",
+  gaugeGrid: "grid grid-cols-1 -mx-4 xl:-mx-3 md:grid-cols-3 md:gap-13 lg:gap-3 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8",
   
   // Pie chart container styles
   pieChartContainer: "hidden md:block bg-white lg:-mx-5.5 md:-mx-4 lg:p-1 xl:-mx-3 rounded-xl p-5 shadow-sm border border-gray-100 relative overflow-hidden mb-8",
@@ -58,7 +58,7 @@ export const dashboardStyles = {
   listsGrid: "grid grid-cols-1 gap-6",
   
   // List container styles
-  listContainer: "bg-white rounded-2xl lg:p-5 md:p-6 -mx-8 md:-mx-3 shadow-sm border border-gray-100",
+  listContainer: "bg-white rounded-2xl p-2 md:p-5 mx-0 md:-mx-3 shadow-sm border border-gray-100",
   listHeader: "flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-3",
   listTitle: "text-xl font-bold text-gray-800 md:mt-3 mt-3 flex items-center gap-3",
   listSubtitle: "text-sm text-gray-500 font-normal",
@@ -120,7 +120,7 @@ export const chartStyles = {
 export const incomeStyles = {
   // Layout
   wrapper: "space-y-4 md:space-y-6 p-3 md:p-4 max-w-7xl mx-auto",
-  headerContainer: "bg-white rounded-lg md:rounded-xl p-4 lg:-mx-3.5 overflow-x-hidden md:p-6 mb-6 md:mb-8 shadow",
+  headerContainer: "bg-white rounded-lg md:rounded-xl p-4 lg:-mx-3.5 overflow-x-hidden md:p-6 mb-6 -mx-4 md:mb-8 shadow",
   header: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4 mb-4 md:mb-6",
   headerTitle: "text-xl md:text-2xl lg:text-3xl font-bold text-gray-800",
   headerSubtitle: "text-gray-600 mt-1 text-sm md:text-base",
@@ -193,10 +193,10 @@ export const incomeStyles = {
 
 export const expensePageStyles = {
   // Main container
-  container:  "space-y-4 md:space-y-6 md:pt-4 max-w-7xl mx-auto",
+  container:  "space-y-4 pt-3 md:space-y-6 md:pt-4 max-w-7xl mx-auto",
   
   // Header card
-  headerCard: "bg-white rounded-lg p-4 lg:-mx-0 -mx-3.5  overflow-x-hidden mb-8 shadow",
+  headerCard: "bg-white rounded-lg p-4 lg:-mx-0 md:-mx-4 overflow-x-hidden mb-8 shadow",
   headerContainer: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4 mb-4 md:mb-6",
   headerTitle: "text-2xl md:text-3xl font-bold text-gray-800",
   headerSubtitle: "text-gray-600 mt-1",
@@ -672,8 +672,8 @@ export const styles = {
     refreshIcon: (loading) => `w-5 h-5 text-gray-500 ${loading ? 'animate-spin' : ''}`,
     dataStackingInfo: "flex items-center gap-2 text-xs text-gray-500 mb-4 bg-blue-50 p-2 rounded-lg",
     dataStackingIcon: "w-4 h-4 text-blue-500",
-    listContainer: "space-y-4 max-h-[500px] -mx-5 overflow-y-auto pr-2",
-    transactionItem: "flex items-center lg:flex-col xl:flex-row md:flex-row justify-between p-1 -mx-0 lg:p-4 md:p-4 hover:bg-gray-50 rounded-xl transition-all duration-300 border border-gray-100",
+    listContainer: "space-y-4 max-h-[500px] -mx-5 overflow-y-auto pr-2 pl-2",
+    transactionItem: "flex items-center lg:flex-col xl:flex-row md:flex-row justify-between p-2 -mx-0 lg:p-4 md:p-4 hover:bg-gray-50 rounded-xl transition-all duration-300 border border-gray-100",
     iconWrapper: (type) => type === 'income' ? 'bg-teal-100 text-teal-600' : 'bg-orange-100 text-orange-600',
     icon: "w-4 h-4",
     details: "min-w-0",
