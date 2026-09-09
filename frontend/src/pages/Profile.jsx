@@ -218,7 +218,7 @@ const Profile = ({ onUpdateProfile, onLogout }) => {
             <div className={profileStyles.mainContainer}>
                 <div className={profileStyles.header}>
                     <div className={profileStyles.avatar}>
-                        <User className='w-12 h-12' />
+                        <User className='w-12 h-12 text-white' />
                     </div>
                     <h1 className={profileStyles.userName}>
                         {user.name || 'Loading...'}
@@ -289,7 +289,7 @@ const Profile = ({ onUpdateProfile, onLogout }) => {
                             <div className="space-y-4">
                                 <div className={profileStyles.securityItem}>
                                     <div>
-                                        <p className={profileStyles.securityText}>Password</p>
+                                        <p className={profileStyles.securityText}>********</p>
                                     </div>
                                     <button onClick={() => setShowPasswordModal(true)} className={profileStyles.changeButton} disabled={loading}>
                                         Change Password

@@ -14,9 +14,9 @@ const Navbar = ({ user, onLogout }) => {
     const handleLogout = () => {
         setMenuOpen(false);
         localStorage.removeItem('user');
-        // localStorage.removeItem('token');
-        // sessionStorage.removeItem('user');
-        // sessionStorage.removeItem('token');
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('token');
         onLogout();
         navigate('/login');
     }

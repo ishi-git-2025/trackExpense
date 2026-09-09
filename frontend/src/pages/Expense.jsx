@@ -405,7 +405,7 @@ const ExpensePage = () => {
               <Calendar className="w-3 h-3 mr-1" /> {timeFrameRange.label}
             </div>
           }
-          borderColor={styles.borderOrange}
+          borderColor={styles.borderAmber}
         />
 
         <FinancialCard
@@ -437,7 +437,7 @@ const ExpensePage = () => {
               <Calendar className="w-3 h-3 mr-1" /> {filter === "all" ? "All records" : "Filtered records"}
             </div>
           }
-          borderColor={styles.borderYellow}
+          borderColor={styles.borderAmber}
         />
       </div>
 
