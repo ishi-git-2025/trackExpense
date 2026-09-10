@@ -48,6 +48,7 @@ export const getDashboardData = async (req, res) => {
                 monthlyExpense,
                 savings,
                 savingsRate,
+                spendByCategory,
                 recentTransactions,
                 expenseDistribution,
             },

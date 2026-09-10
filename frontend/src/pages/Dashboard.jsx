@@ -234,12 +234,10 @@ const Dashboard = () => {
               : new Date().toISOString();
 
           return {
-            id: item._id || item.id || Date.now() + Math.random(),
+            id: item._id || Date.now() + Math.random(),
             date: isoDate,
             description:
               item.description ||
-              item.note ||
-              item.title ||
               (typeFromServer === "income"
                 ? item.source || "Income"
                 : item.category || "Expense"),
@@ -411,14 +409,14 @@ const Dashboard = () => {
                   {displayIncome > 0 ? Math.round(displaySavings / displayIncome * 100) : 0}% of the income
                 </span>
               </div>
-              {typeof overviewMeta.savingsRate === 'number' && (
+              {/* {typeof overviewMeta.savingsRate === 'number' && (
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-medium 
                   ${overviewMeta.savingsRate < 0 ? trendStyles.negative : trendStyles.positive}`
                   }>
                   {overviewMeta.savingsRate}%
                 </span>
-              )}
+              )} */}
             </div>
           }
         />
