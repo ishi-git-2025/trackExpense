@@ -216,7 +216,7 @@ export const expensePageStyles = {
   transactionsContainer: "bg-white rounded-2xl p-5 -mx-4 lg:-mx-0 md:-mx-5 shadow-sm border border-gray-100 relative overflow-hidden",
   transactionsHeader: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4 mb-4 md:mb-5",
   transactionsTitle: "text-lg md:text-xl font-bold text-gray-800 mb-4 md:mb-5 flex items-center gap-2 md:gap-3",
-  filterSelect: "appearance-none bg-white border border-gray-300 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent w-full",
+  filterSelect: "appearance-none bg-white border border-gray-300 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent w-full",
   
   // Transaction items
   transactionsList: "space-y-3 -mx-2 lg:-mx-0 md:-mx-0",
