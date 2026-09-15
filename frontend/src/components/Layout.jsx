@@ -50,6 +50,7 @@ const Layout = ({ user: propUser, onLogout }) => {
     const [showAllTransactions, setShowAllTransactions] = useState(false);
     const [lastUpdated, setLastUpdated] = useState(new Date());
     const [user, setUser] = useState(propUser || null);
+    const [dashboardData, setDashboardData] = useState({});
 
     //To fetch transactions
     const fetchTransactions = async () => {
@@ -90,6 +91,53 @@ const Layout = ({ user: propUser, onLogout }) => {
             );
         } finally {
             setLoading(false);
+        }
+    };
+
+    // To fetch the current month's aggregated dashboard data (BE computes monthly totals)
+    const fetchDashboardData = async () => {
+        try {
+            const response = await api.get("/dashboard");
+            if (response?.data?.success) {
+                const data = response.data.data || {};
+
+                const recentTransactions = (data.recentTransactions || []).map((item) => {
+                    const typeFromServer = item.type || (item.category ? "expense" : "income");
+                    const amountNum = Number(item.amount) || 0;
+                    const isoDate = item.date
+                        ? new Date(item.date).toISOString()
+                        : item.createdAt
+                            ? new Date(item.createdAt).toISOString()
+                            : new Date().toISOString();
+
+                    return {
+                        id: item._id || Date.now() + Math.random(),
+                        date: isoDate,
+                        description:
+                            item.description ||
+                            (typeFromServer === "income" ? item.source || "Income" : item.category || "Expense"),
+                        amount: amountNum,
+                        type: typeFromServer,
+                        category: item.category || (typeFromServer === "income" ? "Salary" : "Other"),
+                        raw: item,
+                    };
+                });
+
+                setDashboardData({
+                    monthlyIncome: Number(data.monthlyIncome || 0),
+                    monthlyExpense: Number(data.monthlyExpense || 0),
+                    savings: Number(data.savings || 0),
+                    savingsRate: Number(data.savingsRate || 0),
+                    spendByCategory: data.spendByCategory || {},
+                    expenseDistribution: data.expenseDistribution || [],
+                    recentTransactions,
+                });
+            }
+        } catch (err) {
+            console.error(
+                "Failed to fetch dashboard data",
+                err?.response || err.message || err
+            );
         }
     };
 
@@ -214,6 +262,9 @@ const Layout = ({ user: propUser, onLogout }) => {
         };
 
         loadInitialData();
+        
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        fetchDashboardData();
     }, []);
 
     const filteredTransactions = useMemo(
@@ -221,84 +272,61 @@ const Layout = ({ user: propUser, onLogout }) => {
         [transactions, timeFrame]
     ); // filter with useMemo to avoid unnecessary recalculations
 
-    // Calculate statistics based on the filtered transactions
+    // Calculate all-time totals and a calendar month-over-month trend % (monthly totals now come from dashboardData)
     const stats = useMemo(() => {
         const now = new Date();
-        const thirtyDaysAgo = new Date(now);
-        thirtyDaysAgo.setDate(now.getDate() - 30);
-        // console.log("date thirtyDaysAgo", thirtyDaysAgo);
+        const previousMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
-        const last30DaysTransactions = transactions.filter(
-            (t) => new Date(t.date) >= thirtyDaysAgo
-        );
+        const sumByType = (list, type) =>
+            list
+                .filter((t) => t.type === type)
+                .reduce((sum, t) => sum + Number(t.amount), 0);
 
-        const last30DaysIncome = last30DaysTransactions
-            .filter((t) => t.type === "income")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
-
-        const last30DaysExpenses = last30DaysTransactions
-            .filter((t) => t.type === "expense")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
-
-        const allTimeIncome = transactions
-            .filter((t) => t.type === "income")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
-
-        const allTimeExpenses = transactions
-            .filter((t) => t.type === "expense")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
-
-        const savingsRate =
-            last30DaysIncome > 0
-                ? Math.round(
-                    ((last30DaysIncome - last30DaysExpenses) / last30DaysIncome) * 100
-                )
-                : 0;
-
-        const last60DaysAgo = new Date(now);
-        last60DaysAgo.setDate(now.getDate() - 60);
-
-        const previous30DaysTransactions = transactions.filter((t) => {
+        const currentMonthTransactions = transactions.filter((t) => {
             const date = new Date(t.date);
-            return date >= last60DaysAgo && date < thirtyDaysAgo;
+            return (
+                date.getFullYear() === now.getFullYear() &&
+                date.getMonth() === now.getMonth()
+            );
+        });
+        const previousMonthTransactions = transactions.filter((t) => {
+            const date = new Date(t.date);
+            return (
+                date.getFullYear() === previousMonthDate.getFullYear() &&
+                date.getMonth() === previousMonthDate.getMonth()
+            );
         });
 
-        const previous30DaysExpenses = previous30DaysTransactions
-            .filter((t) => t.type === "expense")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
+        const currentMonthIncome = sumByType(currentMonthTransactions, "income");
+        const currentMonthExpenses = sumByType(currentMonthTransactions, "expense");
+        const previousMonthIncome = sumByType(previousMonthTransactions, "income");
+        const previousMonthExpenses = sumByType(previousMonthTransactions, "expense");
 
-        const previous30DaysIncome = previous30DaysTransactions
-            .filter((t) => t.type === "income")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
+        const allTimeIncome = sumByType(transactions, "income");
+        const allTimeExpenses = sumByType(transactions, "expense");
 
         const expenseChange =
-            previous30DaysExpenses > 0
+            previousMonthExpenses > 0
                 ? Math.round(
-                    ((last30DaysExpenses - previous30DaysExpenses) /
-                        previous30DaysExpenses) *
+                    ((currentMonthExpenses - previousMonthExpenses) /
+                        previousMonthExpenses) *
                     100
                 )
                 : 0;
 
         const incomeChange =
-            previous30DaysIncome > 0
+            previousMonthIncome > 0
                 ? Math.round(
-                    ((last30DaysIncome - previous30DaysIncome) /
-                        previous30DaysIncome) *
+                    ((currentMonthIncome - previousMonthIncome) /
+                        previousMonthIncome) *
                     100
                 )
                 : 0;
 
         return {
-            totalTransactions: transactions.length,
-            last30DaysIncome,
-            last30DaysExpenses,
-            last30DaysSavings: last30DaysIncome - last30DaysExpenses,
             allTimeIncome,
             allTimeExpenses,
             allTimeSavings: allTimeIncome - allTimeExpenses,
-            last30DaysCount: last30DaysTransactions.length,
-            savingsRate,
             expenseChange,
             incomeChange,
         };
@@ -322,6 +350,8 @@ const Layout = ({ user: propUser, onLogout }) => {
         editTransaction,
         deleteTransaction,
         refreshTransactions: fetchTransactions,
+        dashboardData,
+        refreshDashboardData: fetchDashboardData,
         timeFrame,
         setTimeFrame,
         lastUpdated,
@@ -368,7 +398,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                             <div>
                                 <p className={styles.statCards.cardTitle}>Total Balance</p>
                                 <p className={styles.statCards.cardValue}>
-                                    ₹{stats.allTimeSavings.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+                                    ₹{stats?.allTimeSavings.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
                                 </p>
                             </div>
                             <div className={styles.statCards.iconContainer("teal")}>
@@ -377,7 +407,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                         </div>
                         <p className={styles.statCards.cardFooter}>
                             <span className='text-teal-600 font-medium'>
-                                +₹{stats.last30DaysSavings.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+                                +₹{Number(dashboardData?.savings || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })}
                             </span>{" "} this month
                         </p>
                     </div>
@@ -387,7 +417,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                             <div>
                                 <p className={styles.statCards.cardTitle}>Monthly Income</p>
                                 <p className={styles.statCards.cardValue}>
-                                    ₹{stats.last30DaysIncome.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+                                    ₹{Number(dashboardData?.monthlyIncome || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })}
                                 </p>
                             </div>
                             <div className={styles.statCards.iconContainer("green")}>
@@ -396,7 +426,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                         </div>
                         <p className={styles.statCards.cardFooter}>
                             <span className='text-green-600 font-medium'>
-                                {stats.incomeChange}%
+                                {stats?.incomeChange}%
                             </span>{" "} from last month
                         </p>
                     </div>
@@ -406,7 +436,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                             <div>
                                 <p className={styles.statCards.cardTitle}>Monthly Expenses</p>
                                 <p className={styles.statCards.cardValue}>
-                                    ₹{stats.last30DaysExpenses.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+                                    ₹{Number(dashboardData?.monthlyExpense || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })}
                                 </p>
                             </div>
                             <div className={styles.statCards.iconContainer("orange")}>
@@ -415,8 +445,8 @@ const Layout = ({ user: propUser, onLogout }) => {
                         </div>
                         <p className={styles.statCards.cardFooter}>
                             <span className={`font-medium ${styles.colors.expenseChange(stats.expenseChange)}`}>
-                                {stats.expenseChange > 0 ? "+" : ""}
-                                {stats.expenseChange}%
+                                {stats?.expenseChange > 0 ? "+" : ""}
+                                {stats?.expenseChange}%
                             </span>{" "} from last month
                         </p>
                     </div>
@@ -427,7 +457,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                             <div>
                                 <p className={styles.statCards.cardTitle}>Saving Rate</p>
                                 <p className={styles.statCards.cardValue}>
-                                    {stats.savingsRate}%
+                                    {dashboardData?.savingsRate ?? 0}%
                                 </p>
                             </div>
                             <div className={styles.statCards.iconContainer("blue")}>
@@ -435,7 +465,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                             </div>
                         </div>
                         <p className={styles.statCards.cardFooter}>
-                            {getSavingsRating(stats.savingsRate)}
+                            {getSavingsRating(dashboardData?.savingsRate ?? 0)}
                         </p>
                     </div>
                 </div>

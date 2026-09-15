@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { dashboardStyles, trendStyles, chartStyles } from '../assets/pageStyles';
 import { GAUGE_COLORS, COLORS, EXPENSE_CATEGORY_ICONS, INCOME_CATEGORY_ICONS } from '../assets/color';
 import { calculateData, getTimeFrameRange, getPreviousTimeFrameRange } from '../components/Helpers';
@@ -47,12 +47,13 @@ const Dashboard = () => {
     transactions: outletTransactions = [],
     timeFrame = "monthly",
     setTimeFrame = () => { },
-    refreshTransactions
+    refreshTransactions,
+    dashboardData: overviewMeta = {},
+    refreshDashboardData = () => { },
   } = useOutletContext(); // to use in calculating weekly & daily data
 
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [overviewMeta, setOverviewMeta] = useState({});
+  const [loading, setLoading] = useState(false);
   const [showAllIncome, setShowAllIncome] = useState(false);
   const [showAllExpense, setShowAllExpense] = useState(false);
 
@@ -215,71 +216,6 @@ const Dashboard = () => {
     ? expenseListForDisplay
     : expenseListForDisplay.slice(0, 3);
 
-  const fetchDashboardOverview = async () => {
-    try {
-      const response = await api.get('/dashboard');
-
-      if (response?.data?.success) {
-        const data = response.data.data || {};
-
-        const recent = (data.recentTransactions || []).map((item) => {
-          const typeFromServer =
-            item.type || (item.category ? "expense" : "income");
-          const amountNum = Number(item.amount) || 0;
-
-          const isoDate = item.date
-            ? new Date(item.date).toISOString()
-            : item.createdAt
-              ? new Date(item.createdAt).toISOString()
-              : new Date().toISOString();
-
-          return {
-            id: item._id || Date.now() + Math.random(),
-            date: isoDate,
-            description:
-              item.description ||
-              (typeFromServer === "income"
-                ? item.source || "Income"
-                : item.category || "Expense"),
-            amount: amountNum,
-            type: typeFromServer,
-            category:
-              item.category ||
-              (typeFromServer === "income" ? "Salary" : "Other"),
-            raw: item,
-          };
-        });
-
-        setOverviewMeta((prev) => ({
-          ...prev,
-          monthlyIncome: Number(data.monthlyIncome || 0),
-          monthlyExpense: Number(data.monthlyExpense || 0),
-          savings:
-            typeof data.savings !== "undefined"
-              ? Number(data.savings)
-              : Number(data.monthlyIncome || 0) - Number(data.monthlyExpense || 0),
-          savingsRate:
-            typeof data.savingsRate !== "undefined" ? data.savingsRate : null,
-          spendByCategory: data.spendByCategory || {},
-          expenseDistribution: data.expenseDistribution || [],
-          recentTransactions: recent,
-        }));
-
-      } else {
-        console.warn("Dashboard endpoint returned success:false", response?.data);
-      }
-    } catch (err) {
-      console.error("Failed to fetch dashboard overview:", err?.response || err.message || err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchDashboardOverview();
-  }, []);
-
   const handleAddTransaction = async () => {
 
     if (!newTransaction.description || !newTransaction.amount) return;
@@ -299,7 +235,7 @@ const Dashboard = () => {
         await api.post(`/expense/add`, payload);
       }
       await refreshTransactions();
-      await fetchDashboardOverview();
+      await refreshDashboardData();
 
       setNewTransaction({
         date: new Date().toISOString().split("T")[0],
