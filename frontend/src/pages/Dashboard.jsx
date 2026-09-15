@@ -48,7 +48,7 @@ const Dashboard = () => {
     timeFrame = "monthly",
     setTimeFrame = () => { },
     refreshTransactions,
-    dashboardData: overviewMeta = {},
+    dashboardData = {},
     refreshDashboardData = () => { },
   } = useOutletContext(); // to use in calculating weekly & daily data
 
@@ -108,18 +108,18 @@ const Dashboard = () => {
   }, [prevFilteredTransactions]);
 
   const displayIncome =
-    timeFrame === "monthly" && typeof overviewMeta.monthlyIncome === "number"
-      ? overviewMeta.monthlyIncome
+    timeFrame === "monthly" && typeof dashboardData.monthlyIncome === "number"
+      ? dashboardData.monthlyIncome
       : currentTimeFrameData.income;
 
   const displayExpenses =
-    timeFrame === "monthly" && typeof overviewMeta.monthlyExpense === "number"
-      ? overviewMeta.monthlyExpense
+    timeFrame === "monthly" && typeof dashboardData.monthlyExpense === "number"
+      ? dashboardData.monthlyExpense
       : currentTimeFrameData.expenses;
 
   const displaySavings =
-    timeFrame === "monthly" && typeof overviewMeta.savings === "number"
-      ? overviewMeta.savings
+    timeFrame === "monthly" && typeof dashboardData.savings === "number"
+      ? dashboardData.savings
       : currentTimeFrameData.savings;
 
   // Gauge data for income, expenses, and savings visualization
@@ -151,11 +151,11 @@ const Dashboard = () => {
   const financialOverviewData = useMemo(() => {
     if (
       timeFrame === "monthly" &&
-      overviewMeta.expenseDistribution &&
-      Array.isArray(overviewMeta.expenseDistribution) &&
-      overviewMeta.expenseDistribution.length > 0
+      dashboardData.expenseDistribution &&
+      Array.isArray(dashboardData.expenseDistribution) &&
+      dashboardData.expenseDistribution.length > 0
     ) {
-      return overviewMeta.expenseDistribution.map((d) => ({
+      return dashboardData.expenseDistribution.map((d) => ({
         name: d.category,
         value: Math.round(Number(d.amount) || 0),
       }));
@@ -173,10 +173,10 @@ const Dashboard = () => {
       name: category,
       value: Math.round(categories[category]),
     }));
-  }, [filteredTransactions, overviewMeta, timeFrame]);
+  }, [filteredTransactions, dashboardData, timeFrame]);
 
   // Build server provided recent transactions for display, if available
-  const serverRecent = overviewMeta.recentTransactions || [];
+  const serverRecent = dashboardData.recentTransactions || [];
   const serverRecentIncome = serverRecent
     .filter((t) => t.type === "income")
     .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -292,7 +292,7 @@ const Dashboard = () => {
               <Wallet className='w-5 h-5 text-teal-600' />
             </div>
           }
-          label="Total Balance"
+          label={`${timeFrameRange.label}'s Balance`}
           value={`₹${Math.round(displayIncome - displayExpenses).toLocaleString()}`}
           additionalContent={
             <div className="flex items-center gap-2 mt-2 text-sm">
