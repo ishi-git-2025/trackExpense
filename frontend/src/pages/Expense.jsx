@@ -346,7 +346,7 @@ const ExpensePage = () => {
       // Fallback client export
       try {
         const exportData = filteredTransactions.map(t => ({
-          Date: new Date(t.date).toLocaleDateString(),
+          Date: new Date(t.date).toLocaleDateString('en-IN'),
           Description: t.description,
           Category: t.category,
           Amount: t.amount,

@@ -226,7 +226,7 @@ const Layout = ({ user: propUser, onLogout }) => {
         const now = new Date();
         const thirtyDaysAgo = new Date(now);
         thirtyDaysAgo.setDate(now.getDate() - 30);
-        console.log("date thirtyDaysAgo", thirtyDaysAgo);
+        // console.log("date thirtyDaysAgo", thirtyDaysAgo);
 
         const last30DaysTransactions = transactions.filter(
             (t) => new Date(t.date) >= thirtyDaysAgo
@@ -490,7 +490,7 @@ const Layout = ({ user: propUser, onLogout }) => {
                                                         {description}
                                                     </p>
                                                     <p className={styles.transactions.meta}>
-                                                        {new Date(date).toLocaleDateString()}
+                                                        {new Date(date).toLocaleDateString('en-IN')}
                                                         <span className="ml-2 capitalize">
                                                             {category}
                                                         </span>

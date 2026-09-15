@@ -519,7 +519,7 @@ const Dashboard = () => {
                   </div>
                   <div className={dashboardStyles.transactionAmount}>
                     <p className={dashboardStyles.incomeAmount}>+₹{Math.abs(transaction.amount).toLocaleString()}</p>
-                    <p className={dashboardStyles.transactionDate}>{new Date(transaction.date).toLocaleDateString()}</p>
+                    <p className={dashboardStyles.transactionDate}>{new Date(transaction.date).toLocaleDateString('en-IN')}</p>
                   </div>
                 </div>
               );
@@ -585,7 +585,7 @@ const Dashboard = () => {
                   </div>
                   <div className={dashboardStyles.transactionAmount}>
                     <p className={dashboardStyles.expenseAmount}>-₹{Math.abs(transaction.amount).toLocaleString()}</p>
-                    <p className={dashboardStyles.transactionDate}>{new Date(transaction.date).toLocaleDateString()}</p>
+                    <p className={dashboardStyles.transactionDate}>{new Date(transaction.date).toLocaleDateString('en-IN')}</p>
                   </div>
                 </div>
               );

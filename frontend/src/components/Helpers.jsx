@@ -160,7 +160,6 @@ export const generateChartPoints = (timeFrame) => {
       });
     }
   } else if (timeFrame === "monthly") {
-    const start = new Date(now.getFullYear(), now.getMonth(), 1);
     const daysInMonth = new Date(
       now.getFullYear(),
       now.getMonth() + 1,
@@ -186,7 +185,6 @@ export const generateChartPoints = (timeFrame) => {
     }
   } else {
     // fallback -> monthly
-    const start = new Date(now.getFullYear(), now.getMonth(), 1);
     const daysInMonth = new Date(
       now.getFullYear(),
       now.getMonth() + 1,
