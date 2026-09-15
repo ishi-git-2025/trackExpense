@@ -224,6 +224,8 @@ const ExpensePage = () => {
 
     filteredTransactions.forEach(transaction => {
       const transDate = new Date(transaction.date);
+
+      // Calculating the corresponding chart point based on the time frame and then updating its expense value
       const point = data.find(d =>
         timeFrame === "daily"
           ? d.hour === transDate.getHours()
