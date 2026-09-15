@@ -162,7 +162,6 @@ const Login = ({ onLogin }) => {
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
                 className={loginStyles.checkbox}
-                required
               />
               <label htmlFor="rememberMe" className={loginStyles.checkboxLabel}>
                 Remember me
