@@ -12,8 +12,8 @@ import {
   TrendingDown, PiggyBank,
   BarChart2, ChevronDown,
   ChevronUp, ShoppingCart,
-  IndianRupee, 
-  PieChart as PieChartIcon, 
+  IndianRupee,
+  PieChart as PieChartIcon,
   TrendingUp as ProfitIcon
 } from 'lucide-react';
 import FinancialCard from '../components/FinancialCard';
@@ -99,6 +99,7 @@ const Dashboard = () => {
     const data = calculateData(filteredTransactions);
     data.savings = data.income - data.expenses;
     return data;
+
   }, [filteredTransactions]);
 
   const prevTimeFrameData = useMemo(() => {
@@ -124,16 +125,26 @@ const Dashboard = () => {
 
   // Gauge data for income, expenses, and savings visualization
   const gaugeData = useMemo(() => {
-    const maxValues = {
-      income: Math.max(displayIncome, 5000),
-      expenses: Math.max(displayExpenses, 3000),
-      savings: Math.max(Math.abs(displaySavings), 2000),
-    };
+    const totalFlow = displayIncome + displayExpenses;
+    const incomeBase = displayIncome > 0 ? displayIncome : 0;
 
+    const incomePercent = totalFlow > 0 ? (displayIncome / totalFlow) * 100 : 0;
+    const spentPercent = incomeBase > 0 ? (displayExpenses / incomeBase) * 100 : 0;
+    const savingsPercent = incomeBase > 0 ? (displaySavings / incomeBase) * 100 : 0;
+
+    // Income %: income share of total cashflow in selected period
+    // Formula: income / (income + expense) × 100
+
+    // Spent %: expense ratio against income (burn rate)
+    // Formula: expense / income × 100
+
+    // Savings %: savings rate
+    // Formula: savings / income × 100
+    
     return [
-      { name: "Income", value: displayIncome, max: maxValues.income },
-      { name: "Spent", value: displayExpenses, max: maxValues.expenses },
-      { name: "Savings", value: displaySavings, max: maxValues.savings },
+      { name: "Income", value: displayIncome, percent: incomePercent },
+      { name: "Spent", value: displayExpenses, percent: spentPercent },
+      { name: "Savings", value: displaySavings, percent: savingsPercent },
     ];
   }, [displayIncome, displayExpenses, displaySavings]);
 
@@ -560,14 +571,14 @@ const Dashboard = () => {
         </div>
       </div>
 
-    <AddTransactionModal
-      showModal={showModal}
-      setShowModal={setShowModal}
-      newTransaction={newTransaction}
-      setNewTransaction={setNewTransaction}
-      handleAddTransaction={handleAddTransaction}
-      loading={loading}
-    />
+      <AddTransactionModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        newTransaction={newTransaction}
+        setNewTransaction={setNewTransaction}
+        handleAddTransaction={handleAddTransaction}
+        loading={loading}
+      />
     </div>
   )
 }

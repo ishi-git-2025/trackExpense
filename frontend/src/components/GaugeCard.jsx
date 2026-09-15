@@ -11,13 +11,14 @@ const GaugeCard = ({
   timeFrameLabel = "",
   highlightNegative = false,
 }) => {
-  const { name = "Metric", value = 0, max = 100 } = gauge;
+  const { name = "Metric", value = 0, percent = 0 } = gauge;
   const isNegative = value < 0;
   const absValue = Math.abs(value);
-  
-  // For negative values, we'll show the absolute value in the chart but indicate it's negative in text
-  const chartValue = isNegative ? absValue : value;
-  const percentage = Math.min((absValue / max) * 100, 100);
+
+  // For negative values, keep sign in text but render gauge fill by magnitude.
+  const percentage = Math.min(Math.abs(percent), 100);
+  const percentSign = percent < 0 ? "-" : "";
+  const normalizedChartValue = Math.max(0, Math.min(percentage, 100));
 
   // Determine colors based on whether value is negative
   const gradientStart = isNegative ? '#ef4444' : (colorInfo.gradientStart || '#00C49F');
@@ -33,7 +34,7 @@ const GaugeCard = ({
       <div className="w-full h-48">
         <ResponsiveContainer>
           <RadialBarChart
-            data={[{...gauge, value: chartValue}]}
+            data={[{...gauge, value: normalizedChartValue}]}
             cx="50%"
             cy="50%"
             startAngle={180}
@@ -43,14 +44,14 @@ const GaugeCard = ({
           >
             <PolarAngleAxis
               type="number"
-              domain={[0, max]}
+              domain={[0, 100]}
               angleAxisId={0}
               tick={false}
               allowDataOverflow
             />
 
             <RadialBar
-              minAngle={15}
+              minAngle={0}
               background={{ fill: '#f3f4f6' }}
               dataKey="value"
               cornerRadius="50%"
@@ -73,7 +74,7 @@ const GaugeCard = ({
               dominantBaseline="middle"
               className={`text-sm ${percentColor}`}
             >
-              {Math.round(percentage)}%
+              {percentSign}{Math.round(percentage)}%
             </text>
 
             <defs>
@@ -92,7 +93,7 @@ const GaugeCard = ({
           </p>
         )}
         <p className="text-sm text-gray-500">
-          {timeFrameLabel} data
+          {timeFrameLabel}'s data
         </p>
       </div>
     </div>
