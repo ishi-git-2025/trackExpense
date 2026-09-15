@@ -1,5 +1,4 @@
-// constants/financeConstants.js
-// constants/financeConstants.js
+
 import { 
   Utensils, Home, Car, ShoppingCart, Gift, 
   TrendingUp, TrendingDown, IndianRupee, 
