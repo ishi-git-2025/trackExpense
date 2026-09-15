@@ -16,20 +16,6 @@ const Signup = ({ onSignup }) => {
     const [loading, setLoading] = React.useState(false);
     const navigate = useNavigate();
 
-    //to fetch user data and token from backend
-    const fetchProfile = async (token) => {
-        if (!token) return;
-        try {
-            const response = await api.get('/user/me', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            const data = response.data;
-            return data;
-        } catch (error) {
-            console.error('Error fetching profile:', error);
-        }
-    }
-
     const validateForm = () => {
         const newErrors = {};
 
@@ -67,17 +53,7 @@ const Signup = ({ onSignup }) => {
 
             const data = response.data || {};
             const token = data.token || null;
-            let profile = data.user || null;
-
-            // Fallback: fetch profile if not in response
-            if (!profile && token) {
-                profile = await fetchProfile(token);
-            }
-
-            // // Fallback: create minimal profile
-            // if (!profile) {
-            //     profile = { name, email };
-            // }
+            const profile = data.user || null;
 
             if (typeof onSignup === "function") {
                 onSignup(profile, rememberMe, token);

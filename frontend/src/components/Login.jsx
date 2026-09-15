@@ -15,20 +15,6 @@ const Login = ({ onLogin }) => {
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
 
-  //to fetch user data and token from backend
-  const fetchProfile = async (token) => {
-    if (!token) return;
-    try {
-      const response = await api.get('/user/me', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
-  }
-
   //to handle login form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,17 +25,7 @@ const Login = ({ onLogin }) => {
       const response = await api.post('/user/login', { email, password });
       const data = response.data || {};
       const token = data.token || null;
-
-      // To derive user profile
-      let profile = data.user ?? null;
-
-      if (!profile && token) {
-        try {
-          profile = await fetchProfile(token);
-        } catch (error) {
-          console.error('Error fetching profile:', error);
-        }
-      }
+      const profile = data.user ?? null;
 
       if (typeof onLogin === 'function') {
         try {
