@@ -83,7 +83,7 @@ const IncomeChart = ({ chartData, timeFrame, timeFrameRange }) => (
           </defs>
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="#f3f4f6"
+            stroke="#cccdcf"
             vertical={false}
           />
           <XAxis

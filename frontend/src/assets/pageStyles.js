@@ -234,6 +234,9 @@ export const expensePageStyles = {
   textOrange: "text-orange-600",
   textAmber: "text-amber-600",
   textYellow: "text-yellow-600",
+
+    // Filter icon positioning 
+  filterIcon: "absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 md:w-4 md:h-4 text-gray-500 pointer-events-none",
   
   // Borders
   borderOrange: "border-l-4 border-orange-500",

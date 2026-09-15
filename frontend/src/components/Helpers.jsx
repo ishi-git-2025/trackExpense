@@ -127,6 +127,7 @@ export const calculateData = (transactions) => {
   return { ...totals, savings: totals.income - totals.expenses };
 };
 
+// helper function to generate chart points based on the selected time frame (daily, weekly, monthly, yearly)
 export const generateChartPoints = (timeFrame) => {
   const now = new Date();
   const points = [];
