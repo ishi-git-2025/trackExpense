@@ -29,16 +29,6 @@ const Login = ({ onLogin }) => {
     }
   }
 
-  const persistAuth = (profile, token) => {
-    const storage = rememberMe ? localStorage : sessionStorage;
-    try {
-      if (token) storage.setItem('token', token);
-      if (profile) storage.setItem('user', JSON.stringify(profile));
-    } catch (error) {
-      console.error('Error saving auth data:', error);
-    }
-  }
-
   //to handle login form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,8 +50,6 @@ const Login = ({ onLogin }) => {
           console.error('Error fetching profile:', error);
         }
       }
-
-      persistAuth(profile, token);
 
       if (typeof onLogin === 'function') {
         try {

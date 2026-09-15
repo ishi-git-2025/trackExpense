@@ -30,16 +30,6 @@ const Signup = ({ onSignup }) => {
         }
     }
 
-    const persistAuth = (profile, token) => {
-        const storage = rememberMe ? localStorage : sessionStorage;
-        try {
-            if (token) storage.setItem('token', token);
-            if (profile) storage.setItem('user', JSON.stringify(profile));
-        } catch (error) {
-            console.error('Error saving auth data:', error);
-        }
-    }
-
     const validateForm = () => {
         const newErrors = {};
 
@@ -88,8 +78,6 @@ const Signup = ({ onSignup }) => {
             // if (!profile) {
             //     profile = { name, email };
             // }
-
-            persistAuth(profile, token);
 
             if (typeof onSignup === "function") {
                 onSignup(profile, rememberMe, token);
