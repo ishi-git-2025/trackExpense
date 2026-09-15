@@ -7,7 +7,6 @@ A full-stack expense tracking web application (frontend + backend) that helps us
 - Dashboard with visualisations and metrics
 - Time-frame filtering for transactions
 - Authentication UI components (Login / Signup) included in the frontend
-- Sample testing data available in the backend
 
 ## Stack
 - Language(s): JavaScript (frontend JSX + backend JS)
@@ -18,4 +17,3 @@ A full-stack expense tracking web application (frontend + backend) that helps us
   - backend/controllers/* — dashboardController.js, expenseController.js, incomeController.js
   - backend/models/* — expenseModel.js, incomeModel.js
   - backend/utils/dateFilter.js — utility for filtering by date
-  - backend/testingDATA — sample/test data file

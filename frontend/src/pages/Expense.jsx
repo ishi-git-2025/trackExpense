@@ -85,7 +85,7 @@ const ExpensePage = () => {
     type: "expense",
     category: "Food",
   });
-  const [ setOverview] = useState({
+  const [overview, setOverview] = useState({
     totalExpense: 0,
     averageExpense: 0,
     numberOfTransactions: 0,
@@ -121,12 +121,16 @@ const ExpensePage = () => {
 
   // Initial load
   useEffect(() => {
+    
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchOverview(timeFrame);
   }, [fetchOverview, timeFrame]);
 
   // Re-fetch overview when timeframe changes
   useEffect(() => {
     if (filter === "month" && !timeFrame) setTimeFrame("monthly");
+    
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchOverview(timeFrame);
   }, [timeFrame, selectedMonth, filter, setTimeFrame, fetchOverview]);
 
@@ -199,13 +203,18 @@ const ExpensePage = () => {
 
   // Calculate totals
   const totalExpense = useMemo(
-    () => filteredTransactions.reduce((sum, t) => sum + Math.round(Number(t.amount || 0)), 0),
-    [filteredTransactions]
+    () =>
+      overview.totalExpense ??
+      filteredTransactions.reduce((sum, t) => sum + Math.round(Number(t.amount || 0)), 0),
+    [overview.totalExpense, filteredTransactions]
   );
   
   const averageExpense = useMemo(
-    () => filteredTransactions.length ? Math.round(totalExpense / filteredTransactions.length) : 0,
-    [filteredTransactions, totalExpense]
+    () =>
+      overview.averageExpense
+        ? Math.round(overview.averageExpense)
+        : filteredTransactions.length ? Math.round(totalExpense / filteredTransactions.length) : 0,
+    [overview.averageExpense, filteredTransactions, totalExpense]
   );
 
   // Prepare chart data
